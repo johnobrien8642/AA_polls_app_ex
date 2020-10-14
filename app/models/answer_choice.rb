@@ -1,6 +1,8 @@
 
 
 class AnswerChoice < ApplicationRecord
+    validates :body, presence: :true
+    
     belongs_to :question,
       class_name: :Question,
       foreign_key: :question_id,
