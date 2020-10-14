@@ -2,7 +2,6 @@ require 'byebug'
 
 class Response < ApplicationRecord
     
-
     belongs_to :respondent,
       class_name: :User,
       foreign_key: :respondent_id,
@@ -28,12 +27,7 @@ class Response < ApplicationRecord
 
     def respondent_already_answered?
     # Answer from solution
-    # sibling_responses.exists?(respondent_id: self.respondent_id)
-    # My less DRY answer
-      respondents = sibling_responses
-      respondents.each do |response|
-        return true if response.respondent_id == self.id
-      end
+      sibling_responses.exists?(respondent_id: self.respondent_id)
     end
 
     def sibling_responses
