@@ -65,6 +65,4 @@ class User < ApplicationRecord
         .joins(joins_sql)
         .group('polls.id')
     end
-
-
 end

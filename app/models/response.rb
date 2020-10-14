@@ -1,6 +1,7 @@
 require 'byebug'
 
 class Response < ApplicationRecord
+    after_destroy :log_destroy_action
     
     belongs_to :respondent,
       class_name: :User,
@@ -40,5 +41,21 @@ class Response < ApplicationRecord
       if poll_author_id == self.respondent_id
         errors[:respondent_id] << 'cannot be poll author'
       end
+    end
+
+    def does_not_respond_to_own_poll_1_query
+        poll_author_id = Poll
+          .joins(questions: :answer_choices)
+          .where('answer_choices.id = ?', self.answer_choice_id)
+          .pluck('polls.user_id')
+          .first
+
+        if poll_author_id == self.respondent_id
+          errors[:respondent_id] << 'cannot be poll author'
+        end
+    end
+
+    def log_destroy_action
+      puts 'Response destroyed'
     end
 end

@@ -8,14 +8,16 @@ class Question < ApplicationRecord
       foreign_key: :poll_id,
       primary_key: :id
 
-    has_many :answer_choices,
+    has_many :answer_choices, 
       class_name: :AnswerChoice,
       foreign_key: :question_id,
-      primary_key: :id
+      primary_key: :id,
+      dependent: :destroy
 
     has_many :responses,
       through: :answer_choices,
-      source: :responses
+      source: :responses,
+      dependent: :destroy
 
     def results_2_queries
       # # N + 1 solution
