@@ -31,6 +31,4 @@ ActiveRecord::Base.transaction do
     
     resp1 = Response.create!(respondent_id: u2.id, answer_choice_id: ac1.id)
     resp2 = Response.create!(respondent_id: u3.id, answer_choice_id: ac3.id)
-    resp3 = Response.create!(respondent_id: u1.id, answer_choice_id: ac3.id)
-    resp4 = Response.create!(respondent_id: u1.id, answer_choice_id: ac5.id)
 end

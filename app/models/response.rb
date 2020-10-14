@@ -18,6 +18,7 @@ class Response < ApplicationRecord
       source: :question
 
     validate :not_duplicate_response, unless: -> { answer_choice.nil?}  
+    validate :author_cannot_respond_to_own_poll, unless: -> { answer_choice.nil? }
 
     def not_duplicate_response
       if respondent_already_answered?
@@ -26,8 +27,9 @@ class Response < ApplicationRecord
     end
 
     def respondent_already_answered?
-    #   sibling_responses.exists?(respondent_id: self.respondent_id)
-    #   debugger
+    # Answer from solution
+    # sibling_responses.exists?(respondent_id: self.respondent_id)
+    # My less DRY answer
       respondents = sibling_responses
       respondents.each do |response|
         return true if response.respondent_id == self.id
@@ -36,5 +38,13 @@ class Response < ApplicationRecord
 
     def sibling_responses
       question.responses.where.not(id: self.id)
+    end
+
+    def author_cannot_respond_to_own_poll
+      poll_author_id = self.answer_choice.question.poll.user_id
+
+      if poll_author_id == self.respondent_id
+        errors[:respondent_id] << 'cannot be poll author'
+      end
     end
 end
