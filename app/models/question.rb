@@ -71,4 +71,17 @@ class Question < ApplicationRecord
       end
       count_hash
     end
+
+    def results
+      acs = self.answer_choices
+        .select('answer_choices.body, COUNT(responses.id) AS results')
+        .left_outer_joins(:responses)
+        .group('answer_choices.id')
+
+      count_hash = {}
+      acs.each do |result|
+        count_hash[result.body] = result.results
+      end
+      count_hash
+    end
 end
